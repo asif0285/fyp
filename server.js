@@ -24,6 +24,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 });
 
+app.post('/test', (req, res) => {
+  res.json({ message: 'Welcome test' });
+});
+
 // Temporary storage for users in signup process
 const pendingUsers = new Map();
 
