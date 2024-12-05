@@ -1,37 +1,40 @@
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+const bodyParser = require('body-parser');
+const authRoutes = require('./routes/auth');
+const { pool } = require('../db');
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the API' });
+// Add CSP headers middleware
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; style-src 'self' 'unsafe-inline';"
+  );
+  next();
 });
 
-// Example route
-app.get('/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
+// Routes
+app.use('/auth', authRoutes);
+
+// Test database connection
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error connecting to the database', err);
+  } else {
+    console.log('Connected to the database');
+  }
 });
 
-// POST example
-app.post('/echo', (req, res) => {
-  res.json({ echo: req.body });
+// Handle 404 errors
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
 });
 
-// Catch-all route for undefined routes
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Not Found' });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
+console.log('test');
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
@@ -41,5 +44,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Export the Express API
 module.exports = app;
