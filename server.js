@@ -24,8 +24,12 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 });
 
-app.post('/test', (req, res) => {
-  res.json({ message: 'Welcome test' });
+app.post('/test', (req, res, next) => {
+  try {
+    res.json({ message: 'Welcome test' });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Temporary storage for users in signup process
