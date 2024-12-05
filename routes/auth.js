@@ -7,6 +7,13 @@ const { sendOTP,sendMessage } = require('../utils/twilio');
 
 const router = express.Router();
 
+// Root route
+router.get('/', (req, res) => {
+  res.send({activeStatus:true,
+    error:false,
+  })
+});
+
 // Temporary storage for users in signup process
 const pendingUsers = new Map();
 
@@ -191,6 +198,5 @@ router.post('/forward-message', async (req, res) => {
     res.status(500).json({ message: 'Server error while forwarding message' });
   }
 });
-
-module.exports = router;
+module.exports= router;
 
