@@ -1,21 +1,45 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
-const port = 3000;
 
-// Add the auth router import
-const authRouter = require('./auth');
+// Middleware
+app.use(cors());
+app.use(express.json());
 
+// Root route
 app.get('/', (req, res) => {
-  res.send('Hello from the root route!');
+  res.json({ message: 'Welcome to the API' });
 });
 
-// Use the auth router
-app.use('/auth', authRouter);
-
-app.get('*', (req, res) => {
-  res.status(404).send('Not Found');
+// Example route
+app.get('/hello', (req, res) => {
+  res.json({ message: 'Hello, World!' });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// POST example
+app.post('/echo', (req, res) => {
+  res.json({ echo: req.body });
 });
+
+// Catch-all route for undefined routes
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+// Export the Express API
+module.exports = app;
