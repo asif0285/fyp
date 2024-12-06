@@ -112,7 +112,7 @@ app.get('/auth/verify-otp', async (req, res) => {
 });
 
 // Login
-app.get('/auth/login', async (req, res) => {
+app.get('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -138,7 +138,7 @@ app.get('/auth/login', async (req, res) => {
 });
 
 // Forgot password
-app.get('/auth/forgot-password', async (req, res) => {
+app.get('/forgot-password', async (req, res) => {
   const { phone } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE phone = $1', [phone]);
@@ -166,7 +166,7 @@ app.get('/auth/forgot-password', async (req, res) => {
 });
 
 // Reset password
-app.get('/auth/reset-password', async (req, res) => {
+app.get('/reset-password', async (req, res) => {
   const { phone, otp, newPassword } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE phone = $1', [phone]);
@@ -198,7 +198,7 @@ app.get('/auth/reset-password', async (req, res) => {
 });
 
 // Forward message
-app.get('/auth/forward-message', async (req, res) => {
+app.get('/forward-message', async (req, res) => {
   const { text, senderPhone } = req.body;
 
   if (!text || !senderPhone) {
