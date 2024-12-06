@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 });
 
-app.post('/test', (req, res, next) => {
+app.get('/test', (req, res, next) => {
   try {
     res.json({ message: 'Welcome test' });
   } catch (error) {
@@ -44,7 +44,7 @@ app.get('/auth', (req, res) => {
 });
 
 // Sign up
-app.post('/auth/signup', async (req, res) => {
+app.get('/auth/signup', async (req, res) => {
   const { username, email, password, phone } = req.body;
   try {
     // Check if user already exists
@@ -80,7 +80,7 @@ app.post('/auth/signup', async (req, res) => {
 });
 
 // Verify OTP and complete registration
-app.post('/auth/verify-otp', async (req, res) => {
+app.get('/auth/verify-otp', async (req, res) => {
   const { phone, otp } = req.body;
   try {
     const pendingUser = pendingUsers.get(phone);
@@ -112,7 +112,7 @@ app.post('/auth/verify-otp', async (req, res) => {
 });
 
 // Login
-app.post('/auth/login', async (req, res) => {
+app.get('/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -138,7 +138,7 @@ app.post('/auth/login', async (req, res) => {
 });
 
 // Forgot password
-app.post('/auth/forgot-password', async (req, res) => {
+app.get('/auth/forgot-password', async (req, res) => {
   const { phone } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE phone = $1', [phone]);
@@ -166,7 +166,7 @@ app.post('/auth/forgot-password', async (req, res) => {
 });
 
 // Reset password
-app.post('/auth/reset-password', async (req, res) => {
+app.get('/auth/reset-password', async (req, res) => {
   const { phone, otp, newPassword } = req.body;
   try {
     const user = await pool.query('SELECT * FROM users WHERE phone = $1', [phone]);
@@ -198,7 +198,7 @@ app.post('/auth/reset-password', async (req, res) => {
 });
 
 // Forward message
-app.post('/auth/forward-message', async (req, res) => {
+app.get('/auth/forward-message', async (req, res) => {
   const { text, senderPhone } = req.body;
 
   if (!text || !senderPhone) {
